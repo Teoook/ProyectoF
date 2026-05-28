@@ -670,9 +670,9 @@
 
         document.getElementById('restartButton').addEventListener('click', () => location.reload());
         document.getElementById('exitButton').addEventListener('click', () => {
-            window.close();
-            setTimeout(() => document.body.innerHTML = '<div style="color:white;text-align:center;margin-top:50px;font-size:24px;">You can close this tab now.</div>', 200);
-        });
+            // Redirige al menú principal (PantallaInicio.html)
+            window.location.href = 'Menu/PantallaInicio.html';
+            });
 
         // ================================================================
         // 12. CONTROLES DE TECLADO Y RATON
