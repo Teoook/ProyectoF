@@ -30,7 +30,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: #333333;
+            background: #1f0000;
             /* gris */
             color: white;
             font-size: 30px;
@@ -194,7 +194,7 @@
         }
 
         #waveText {
-            color: #00bfff;
+            color: #a30000;
         }
 
         /* Punto de mira */
@@ -444,8 +444,8 @@
         dirLight.position.set(5, 20, 10);
         dirLight.castShadow = true;
         scene.add(dirLight);
-        scene.fog = new THREE.Fog(0x666666, 10, 60);
-        scene.fog.density = 0.025;
+        scene.fog = new THREE.Fog(0x333333, 5, 40);
+        scene.fog.density = 0.04;
 
         // ================================================================
         // 3. MUNDO 3D (OCTREE PARA COLISIONES)
@@ -909,7 +909,7 @@
         // ================================================================
         function nextWave() {
             wave++;
-            enemiesToSpawn += 5;
+            enemiesToSpawn += 7;
             enemiesSpawned = 0;
             enemiesKilledThisWave = 0;
             wavePopup.innerHTML = 'WAVE ' + wave;
@@ -1107,7 +1107,7 @@
         }
 
         // ================================================================
-        // 18. CLIMA DINAMICO (DIA/NOCHE + LLUVIA OPCIONAL)
+        // 18. CLIMA DINAMICO (DIA/NOCHE + LLUVIA OPCIONAL) (modifcale la velocidad de lluvia (revisar depronto el abs))
         // ================================================================
         // La niebla gris ya esta fija. Aqui solo cambia el cielo y la luz.
         // La lluvia se activa aleatoriamente y oscurece las luces.
@@ -1130,7 +1130,7 @@
 
         function createRainParticles() {
             if (rainParticles) return;
-            const count = 800;
+            const count = 2000;
             const geo = new THREE.BufferGeometry();
             const pos = new Float32Array(count * 3);
             for (let i = 0; i < count * 3; i += 3) {
@@ -1139,7 +1139,7 @@
                 pos[i + 2] = (Math.random() - 0.5) * 80;
             }
             geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            rainParticles = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xcccccc, size: 0.15, transparent: true, opacity: 0.6, depthWrite: false }));
+            rainParticles = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xcccccc, size: 0.15, transparent: true, opacity: 0.8, depthWrite: false }));
             scene.add(rainParticles);
         }
 
@@ -1151,7 +1151,7 @@
             if (!rainParticles) return;
             const pos = rainParticles.geometry.attributes.position.array;
             for (let i = 0; i < pos.length; i += 3) {
-                pos[i + 1] -= 15 * deltaTime;
+                pos[i + 1] -= 30 * deltaTime;
                 if (pos[i + 1] < -5) { pos[i + 1] = 35; pos[i] = (Math.random() - 0.5) * 80; pos[i + 2] = (Math.random() - 0.5) * 80; }
             }
             rainParticles.geometry.attributes.position.needsUpdate = true;
