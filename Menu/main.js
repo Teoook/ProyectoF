@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 
+
 // escena
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x010105);
@@ -9,6 +10,7 @@ scene.fog = new THREE.FogExp2(0x010105, 0.02);
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.3, 900);
 camera.position.set(0, 1.6, 5.0);
 camera.lookAt(0, 3.5, -2);
+
 
 // renderizador creo que era
 const renderer = new THREE.WebGLRenderer({ antialias: true });

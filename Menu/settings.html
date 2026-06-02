@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>ZOMBIES - NIGHTFALL | CONFIGURACIÓN</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="settings.css">
 </head>
@@ -19,7 +20,6 @@
             <p>CONFIGURACION</p>
         </div>
 
-        <!-- SLIDERS MUSICA Y EFECTOS -->
         <div class="setting-option">
             <div class="option-label">
                 <span>VOLUMEN MUSICA</span>
@@ -45,16 +45,23 @@
 
     <div class="status-indicator">
         <div class="led red"></div>
-        <span>CONFIGURACION </span>
+        <span>CONFIGURACION</span>
     </div>
 
+    <!-- MUSICA -->
+    <audio id="bgMusic" autoplay loop>
+        <source src="/Audios/PP.mp3" type="audio/mpeg">
+    </audio>
+
     <script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js"
-            }
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js"
         }
+    }
     </script>
+
     <script type="module" src="settings.js"></script>
+
 </body>
 </html>

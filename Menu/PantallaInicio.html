@@ -1,28 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>ZOMBIES - NIGHTFALL</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="main.css">
 </head>
-
 <body>
 
-     <!-- Overlay para la intro (el fondo negro ese) -->
     <div id="intro-overlay" class="intro-overlay"></div>
-
-    <!-- Capas de efecto cinematográfico (se revelarán con el fade) -->
-    <div class="noise-overlay"></div>
-    <div class="vignette"></div>
-
-    <!-- titulo principal (se anima desde el centro) -->
-    <div class="menu-title">
-        <h1 class="glitch" data-text="BLACKOUT">BLACKOUT</h1>
-        <p class="subtitle">ZOMBIES: NIGHTFALL</p>
-    </div>
 
     <div class="noise-overlay"></div>
     <div class="vignette"></div>
@@ -37,10 +25,12 @@
             <span class="btn-text">▶ START</span>
             <span class="btn-glow"></span>
         </button>
+
         <button id="settingsBtn" class="tactical-btn">
             <span class="btn-text">⚙ SETTINGS</span>
             <span class="btn-glow"></span>
         </button>
+
         <button id="exitBtn" class="tactical-btn">
             <span class="btn-text">✖ EXIT</span>
             <span class="btn-glow"></span>
@@ -52,53 +42,76 @@
         <span>WAVE ??? | READY</span>
     </div>
 
+    <!-- MUSICA -->
+    <audio id="bgMusic" autoplay loop>
+        <source src="/Audios/PP.mp3" type="audio/mpeg">
+    </audio>
+
     <script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js"
-            }
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js"
         }
+    }
     </script>
-    
+
     <script type="module" src="main.js"></script>
 
-    <!-- Script pa intro -->
     <script>
+        // INTRO
         (function() {
-            // Añadir clase al body para activar el modo intro
             document.body.classList.add('intro-active');
 
-            // Después de 2.5 segundos, quitar la clase para que el título se mueva y aparezca la UI
             setTimeout(() => {
                 document.body.classList.remove('intro-active');
-                // Opcional: ocultar el overlay después de la transición
+
                 const overlay = document.getElementById('intro-overlay');
+
                 if (overlay) {
                     overlay.style.transition = 'opacity 1s ease';
                     overlay.style.opacity = '0';
+
                     setTimeout(() => {
                         overlay.style.display = 'none';
                     }, 1000);
                 }
             }, 2500);
         })();
+
+        // FRASES RANDOM
+        const messages = [
+            "WAVE ??? | READY",
+            "ZOMBIES INCOMING",
+            "LOCK AND LOAD",
+            "THE BEST GAME",
+            "BROCHACO",
+            "NO ESCAPE"
+        ];
+
+        const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+        const statusSpan = document.querySelector('.status-indicator span');
+
+        if (statusSpan) statusSpan.textContent = randomMsg;
+
+        // MUSICA
+        const music = document.getElementById("bgMusic");
+
+        const savedConfig = JSON.parse(
+            localStorage.getItem("zombieAudioConfig")
+        );
+
+        if (savedConfig) {
+            music.volume = savedConfig.music / 100;
+        } else {
+            music.volume = 0.7;
+        }
+
+        music.play().catch(() => {
+            document.addEventListener('click', () => {
+                music.play();
+            }, { once: true });
+        });
     </script>
 
-    <script>
-    // Frases aleatorias
-    const messages = [
-        "WAVE ??? | READY",
-        "ZOMBIES INCOMING",
-        "LOCK AND LOAD",
-        "THE BEST GAME",
-        "BROCHACO",
-        "NO ESCAPE"
-    ];
-    const randomMsg = messages[Math.floor(Math.random() * messages.length)];
-    // Cambiar el texto dentro del status-indicator
-    const statusSpan = document.querySelector('.status-indicator span');
-    if (statusSpan) statusSpan.textContent = randomMsg;
-</script>
 </body>
-
 </html>

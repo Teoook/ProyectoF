@@ -256,6 +256,7 @@
             pointer-events: all;
         }
 
+
         .death-container {
             background: rgba(20, 20, 20, 0.85);
             border: 2px solid rgba(255, 255, 255, 0.15);
@@ -346,10 +347,43 @@
             border-color: rgba(255, 255, 255, 0.5);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
+
+        #pauseMenu {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            z-index: 15;
+        }
+
+        .pause-container {
+            background: rgba(20, 20, 20, 0.95);
+            padding: 30px;
+            border-radius: 18px;
+            text-align: center;
+            color: white;
+            min-width: 320px;
+        }
+
+        #volumeSlider {
+            width: 220px;
+        }
+
+        #resumeButton {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
     </style>
 </head>
 
 <body>
+
 
     <div id="loading">
         <div class="skull">☠️</div>
@@ -359,10 +393,18 @@
     <div id="damageVignette"></div>
 
     <div id="hud">
-        <div id="topCenter"><div id="timer">00:00</div></div>
+        <div id="topCenter">
+            <div id="timer">00:00</div>
+        </div>
         <div id="topLeft">
-            <div class="hudBox"><div class="hudTitle">Wave</div><div class="hudValue" id="waveText">1</div></div>
-            <div class="hudBox"><div class="hudTitle">Kills</div><div class="hudValue" id="killsText">0</div></div>
+            <div class="hudBox">
+                <div class="hudTitle">Wave</div>
+                <div class="hudValue" id="waveText">1</div>
+            </div>
+            <div class="hudBox">
+                <div class="hudTitle">Kills</div>
+                <div class="hudValue" id="killsText">0</div>
+            </div>
         </div>
         <div id="radarContainer">
             <div id="radar">
@@ -372,7 +414,9 @@
         <div id="bottomLeft">
             <div class="hudBox">
                 <div class="hudTitle">Health</div>
-                <div id="healthBar"><div id="healthFill"></div></div>
+                <div id="healthBar">
+                    <div id="healthFill"></div>
+                </div>
                 <div style="margin-top:8px;font-size:24px;font-weight:bold;" id="healthText">100</div>
             </div>
         </div>
@@ -392,14 +436,31 @@
             <div class="death-skull-placeholder">☠️</div>
             <div class="death-title">You Died</div>
             <div class="death-stats">
-                <div class="stat-row"><span class="stat-label">Wave</span><span class="stat-value" id="deathWave">1</span></div>
-                <div class="stat-row"><span class="stat-label">Time</span><span class="stat-value" id="deathTime">00:00</span></div>
-                <div class="stat-row"><span class="stat-label">Kills</span><span class="stat-value" id="deathKills">0</span></div>
+                <div class="stat-row"><span class="stat-label">Wave</span><span class="stat-value"
+                        id="deathWave">1</span></div>
+                <div class="stat-row"><span class="stat-label">Time</span><span class="stat-value"
+                        id="deathTime">00:00</span></div>
+                <div class="stat-row"><span class="stat-label">Kills</span><span class="stat-value"
+                        id="deathKills">0</span></div>
             </div>
             <div class="death-buttons">
                 <button class="death-button" id="restartButton">Restart</button>
                 <button class="death-button" id="exitButton">Exit</button>
             </div>
+        </div>
+    </div>
+
+    <div id="pauseMenu">
+        <div class="pause-container">
+            <h2>PAUSA</h2>
+
+            <p>Volumen</p>
+
+            <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0.6">
+
+            <br><br>
+
+            <button id="resumeButton">Continuar</button>
         </div>
     </div>
 
@@ -417,6 +478,26 @@
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
         import { Octree } from 'three/addons/math/Octree.js';
         import { Capsule } from 'three/addons/math/Capsule.js';
+
+        const gunAudio = new Audio('./Audios/Disparos.mp3');
+        gunAudio.volume = 0.6;
+
+        function playGunSound() {
+            const sound = gunAudio.cloneNode();
+
+            sound.volume = 0.6;
+
+            sound.play().catch(err => console.log(err));
+        }
+
+        const reloadAudio = new Audio('./Audios/Recarga.mp3');
+        reloadAudio.volume = 0.7;
+        reloadAudio.preload = 'auto';
+
+        function playReloadSound() {
+            reloadAudio.currentTime = 0;
+            reloadAudio.play().catch(err => console.log(err));
+        }
 
         // ================================================================
         // 1. ESCENA, CAMARA Y RENDERER
@@ -672,7 +753,7 @@
         document.getElementById('exitButton').addEventListener('click', () => {
             // Redirige al menú principal (PantallaInicio.html)
             window.location.href = 'Menu/PantallaInicio.html';
-            });
+        });
 
         // ================================================================
         // 12. CONTROLES DE TECLADO Y RATON
@@ -967,20 +1048,38 @@
 
         const sparks = [];
 
-        function reload() { ammo = 30; reserveAmmo = 30; updateUI(); }
+        function reload() {
+
+            if (ammo === 30) return;
+
+            playReloadSound();
+
+            ammo = 30;
+            reserveAmmo = 30;
+
+            updateUI();
+        }
 
         function shoot() {
-            if (!worldLoaded || isDead || dying || ammo <= 0) return;
-            ammo--; updateUI();
-            // Retroceso: sumamos un offset que luego decae
-            recoilOffset += RECOIL_STRENGTH;
-            if (recoilOffset > 0.2) recoilOffset = 0.2; // limite maximo
 
-            const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
+            if (!worldLoaded || isDead || dying || ammo <= 0) return;
+            ammo--;
+            updateUI();
+            // SONIDO DEL DISPARO
+            playGunSound();
+            recoilOffset += RECOIL_STRENGTH;
+            if (recoilOffset > 0.2) recoilOffset = 0.2;
+            const bullet = new THREE.Mesh(
+                bulletGeometry,
+                bulletMaterial
+            );
             camera.getWorldDirection(playerDirection);
             bullet.position.copy(camera.position);
             scene.add(bullet);
-            bullets.push({ mesh: bullet, velocity: playerDirection.clone().multiplyScalar(BULLET_SPEED) });
+            bullets.push({
+                mesh: bullet,
+                velocity: playerDirection.clone().multiplyScalar(BULLET_SPEED)
+            });
         }
 
         function createBulletImpact(position, normal, placeDecal = true) {
@@ -1359,6 +1458,8 @@
                 updateUI();
             }
             renderer.render(scene, camera);
+
+
         }
         animate();
     </script>
