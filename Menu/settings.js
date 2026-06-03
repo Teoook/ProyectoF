@@ -1,6 +1,11 @@
 import * as THREE from 'three';
 
+const bgMusic = document.getElementById("bgMusic");
+
+
+
 // ESCENA 3D
+
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x010105);
 scene.fog = new THREE.FogExp2(0x010105, 0.02);

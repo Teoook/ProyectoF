@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FPS Survival</title>
+    <title>FPS Survival </title>
 
     <style>
-        /* ============================
+        /* ========
            ESTILOS GENERALES
-           ============================ */
+           ======== */
         * {
             margin: 0;
             padding: 0;
@@ -22,7 +22,13 @@
             font-family: 'Arial', sans-serif;
         }
 
-        /* Pantalla de carga mejorada: fondo gris con calavera y texto */
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
         #loading {
             position: absolute;
             inset: 0;
@@ -43,7 +49,6 @@
             margin-bottom: 20px;
         }
 
-        /* Vineta roja de daño (aparece cuando la vida es menor al 40%) */
         #damageVignette {
             position: absolute;
             inset: 0;
@@ -54,12 +59,10 @@
             transition: opacity 0.3s;
         }
 
-        /* Efecto de saturacion en el canvas (vida muy baja) */
         canvas {
             transition: filter 0.5s;
         }
 
-        /* HUD principal (se mueve ligeramente con la camara) */
         #hud {
             position: absolute;
             inset: 0;
@@ -83,7 +86,6 @@
             text-shadow: 0 0 15px black;
         }
 
-        /* Radar en esquina superior derecha */
         #radarContainer {
             position: absolute;
             top: 20px;
@@ -197,7 +199,6 @@
             color: #a30000;
         }
 
-        /* Punto de mira */
         #crosshair {
             position: absolute;
             top: 50%;
@@ -226,7 +227,6 @@
             top: 11px;
         }
 
-        /* Anuncio de oleada */
         #wavePopup {
             position: absolute;
             top: 40%;
@@ -240,7 +240,6 @@
             text-shadow: 0 0 25px black;
         }
 
-        /* Pantalla de muerte */
         #deathScreen {
             position: absolute;
             inset: 0;
@@ -346,6 +345,147 @@
             border-color: rgba(255, 255, 255, 0.5);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
+
+        /* ===== MENÚ DE PAUSA ESTILO SETTINGS ===== */
+        #pauseMenu {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 25;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            font-family: 'Bebas Neue', 'Orbitron', 'Arial', sans-serif;
+        }
+
+        .pause-settings-container {
+            background: rgba(10, 10, 15, 0.95);
+            border: 2px solid rgba(255, 50, 50, 0.5);
+            border-radius: 24px;
+            padding: 32px 40px;
+            width: 90%;
+            max-width: 480px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.7), 0 0 15px rgba(255, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .pause-settings-header h2 {
+            font-size: 48px;
+            letter-spacing: 4px;
+            color: #ff4444;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            margin-bottom: 8px;
+        }
+
+        .pause-settings-header p {
+            color: #cccccc;
+            font-size: 14px;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            padding-bottom: 6px;
+            margin-bottom: 25px;
+        }
+
+        .setting-option-pause {
+            margin-bottom: 28px;
+            text-align: left;
+        }
+
+        .option-label-pause {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            color: #e0e0e0;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-size: 18px;
+        }
+
+        .value-pause {
+            color: #ff8888;
+        }
+
+        input[type="range"].pause-slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        input[type="range"].pause-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #ff4444;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 6px #ff0000;
+        }
+
+        .actions-pause {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .pause-btn {
+            background: rgba(20, 20, 30, 0.8);
+            border: 2px solid rgba(255, 80, 80, 0.6);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 10px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pause-btn:hover {
+            background: #ff4444;
+            transform: scale(1.02);
+        }
+
+        .pause-status-indicator {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            color: #aaa;
+            z-index: 26;
+            pointer-events: none;
+        }
+
+        .led.red {
+            width: 10px;
+            height: 10px;
+            background: #ff3333;
+            border-radius: 50%;
+            animation: pulseRed 1.2s infinite;
+        }
+
+        @keyframes pulseRed {
+            0% {
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
     </style>
 </head>
 
@@ -359,10 +499,18 @@
     <div id="damageVignette"></div>
 
     <div id="hud">
-        <div id="topCenter"><div id="timer">00:00</div></div>
+        <div id="topCenter">
+            <div id="timer">00:00</div>
+        </div>
         <div id="topLeft">
-            <div class="hudBox"><div class="hudTitle">Wave</div><div class="hudValue" id="waveText">1</div></div>
-            <div class="hudBox"><div class="hudTitle">Kills</div><div class="hudValue" id="killsText">0</div></div>
+            <div class="hudBox">
+                <div class="hudTitle">Wave</div>
+                <div class="hudValue" id="waveText">1</div>
+            </div>
+            <div class="hudBox">
+                <div class="hudTitle">Kills</div>
+                <div class="hudValue" id="killsText">0</div>
+            </div>
         </div>
         <div id="radarContainer">
             <div id="radar">
@@ -372,7 +520,9 @@
         <div id="bottomLeft">
             <div class="hudBox">
                 <div class="hudTitle">Health</div>
-                <div id="healthBar"><div id="healthFill"></div></div>
+                <div id="healthBar">
+                    <div id="healthFill"></div>
+                </div>
                 <div style="margin-top:8px;font-size:24px;font-weight:bold;" id="healthText">100</div>
             </div>
         </div>
@@ -392,15 +542,42 @@
             <div class="death-skull-placeholder">☠️</div>
             <div class="death-title">You Died</div>
             <div class="death-stats">
-                <div class="stat-row"><span class="stat-label">Wave</span><span class="stat-value" id="deathWave">1</span></div>
-                <div class="stat-row"><span class="stat-label">Time</span><span class="stat-value" id="deathTime">00:00</span></div>
-                <div class="stat-row"><span class="stat-label">Kills</span><span class="stat-value" id="deathKills">0</span></div>
+                <div class="stat-row"><span class="stat-label">Wave</span><span class="stat-value"
+                        id="deathWave">1</span></div>
+                <div class="stat-row"><span class="stat-label">Time</span><span class="stat-value"
+                        id="deathTime">00:00</span></div>
+                <div class="stat-row"><span class="stat-label">Kills</span><span class="stat-value"
+                        id="deathKills">0</span></div>
             </div>
             <div class="death-buttons">
                 <button class="death-button" id="restartButton">Restart</button>
                 <button class="death-button" id="exitButton">Exit</button>
             </div>
         </div>
+    </div>
+
+    // MENU DE PAUSA
+    <div id="pauseMenu">
+        <div class="pause-settings-container">
+            <div class="pause-settings-header">
+                <h2>⏸PAUSA</h2>
+            </div>
+            <div class="setting-option-pause">
+                <div class="option-label-pause"><span>MUSICA</span><span class="value-pause"
+                        id="pauseMusicValue">70%</span></div>
+                <input type="range" id="pauseMusicVolume" class="pause-slider" min="0" max="100" step="1" value="70">
+            </div>
+            <div class="setting-option-pause">
+                <div class="option-label-pause"><span>EFECTOS</span><span class="value-pause"
+                        id="pauseSfxValue">70%</span></div>
+                <input type="range" id="pauseSfxVolume" class="pause-slider" min="0" max="100" step="1" value="70">
+            </div>
+            <div class="actions-pause">
+                <button id="pauseResumeBtn" class="pause-btn">CONTINUAR</button>
+                <button id="pauseResetBtn" class="pause-btn">REINICIAR</button>
+            </div>
+        </div>
+
     </div>
 
     <script type="importmap">
@@ -418,12 +595,25 @@
         import { Octree } from 'three/addons/math/Octree.js';
         import { Capsule } from 'three/addons/math/Capsule.js';
 
-        // ================================================================
-        // 1. ESCENA, CAMARA Y RENDERER
-        // ================================================================
-        // Configuracion inicial de Three.js. La escena contiene todo.
-        // La camara usa un FOV de 75 y rotacion YXZ para evitar gimbal lock.
-        // El renderer tiene antialiasing y sombras activadas.
+        //  AUDIOS 
+        const gunAudio = new Audio('./Audios/Disparos.mp3');
+        gunAudio.volume = 0.5;
+        const reloadAudio = new Audio('./Audios/Recarga.mp3');
+        reloadAudio.volume = 0.8;
+        const healthAudio = new Audio('./Audios/Vida.mp3');
+        healthAudio.volume = 0.8;
+        const explosionAudio = new Audio('./Audios/BA.mp3');
+        explosionAudio.volume = 0.8;
+        const lowHealthAudio = new Audio('./Audios/perdiendoVida.mp3');
+        lowHealthAudio.loop = true;
+        lowHealthAudio.volume = 0.6;
+
+        function playGunSound() { const s = gunAudio.cloneNode(); s.volume = gunAudio.volume; s.play().catch(e => { }); }
+        function playReloadSound() { reloadAudio.currentTime = 0; reloadAudio.play().catch(e => { }); }
+        function playHealthSound() { healthAudio.currentTime = 0; healthAudio.play().catch(e => { }); }
+        function playExplosionSound() { const s = explosionAudio.cloneNode(); s.volume = explosionAudio.volume; s.play().catch(e => { }); }
+
+        //  ESCENA 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
         camera.rotation.order = 'YXZ';
@@ -432,12 +622,7 @@
         renderer.shadowMap.enabled = true;
         document.body.appendChild(renderer.domElement);
 
-        // ================================================================
-        // 2. LUCES Y NIEBLA BASE
-        // ================================================================
-        // Luz hemisferica: simula cielo/suelo.
-        // Luz direccional: proyecta sombras.
-        // Niebla gris permanente desde el inicio (densidad 0.025).
+        //  LUCES 
         const hemi = new THREE.HemisphereLight(0x88ccff, 0x444444, 1.5);
         scene.add(hemi);
         const dirLight = new THREE.DirectionalLight(0xffffff, 2);
@@ -457,10 +642,7 @@
         // temporal que se agrega al octree apenas arranca el juego.
         const worldOctree = new Octree();
         let worldLoaded = false;
-        const emergencyFloor = new THREE.Mesh(
-            new THREE.PlaneGeometry(60, 60),
-            new THREE.MeshLambertMaterial({ color: 0x44aa44 })
-        );
+        const emergencyFloor = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshLambertMaterial({ color: 0x44aa44 }));
         emergencyFloor.rotation.x = -Math.PI / 2;
         emergencyFloor.position.y = -0.1;
         emergencyFloor.receiveShadow = true;
@@ -470,59 +652,24 @@
         worldOctree.fromGraphNode(emergencyGroup);
 
         const loader = new GLTFLoader();
-        loader.load(
-            'https://threejs.org/examples/models/gltf/collision-world.glb',
-            (gltf) => {
-                // Limpiamos el octree y metemos la geometria del mundo real.
-                worldOctree.clear();
-                scene.add(gltf.scene);
-                worldOctree.fromGraphNode(gltf.scene);
-                gltf.scene.traverse((child) => {
-                    if (child.isMesh) {
-                        child.castShadow = true;
-                        child.receiveShadow = true;
-                    }
-                });
-                emergencyFloor.visible = false; // ocultamos el suelo temporal
-                worldLoaded = true;
-                document.getElementById('loading').style.display = 'none';
-            },
-            undefined,
-            (error) => {
-                console.warn('Error loading world. Using emergency floor.', error);
-                worldLoaded = true;
-                document.getElementById('loading').style.display = 'none';
-            }
-        );
+        loader.load('https://threejs.org/examples/models/gltf/collision-world.glb', (gltf) => {
+            worldOctree.clear();
+            scene.add(gltf.scene);
+            worldOctree.fromGraphNode(gltf.scene);
+            gltf.scene.traverse((child) => { if (child.isMesh) { child.castShadow = true; child.receiveShadow = true; } });
+            emergencyFloor.visible = false;
+            worldLoaded = true;
+            document.getElementById('loading').style.display = 'none';
+        }, undefined, () => { worldLoaded = true; document.getElementById('loading').style.display = 'none'; });
 
-        // ================================================================
-        // 4. JUGADOR (FISICAS Y COLISIONES)
-        // ================================================================
-        // El jugador usa una Capsula para detectar colisiones con el octree.
-        // La gravedad se aplica manualmente en updatePlayer.
-        // playerOnFloor se determina mediante la normal del impacto.
-        const playerCollider = new Capsule(
-            new THREE.Vector3(0, 0.35, 0),
-            new THREE.Vector3(0, 1, 0),
-            0.35
-        );
+        //  JUGADOR 
+        const playerCollider = new Capsule(new THREE.Vector3(0, 0.35, 0), new THREE.Vector3(0, 1, 0), 0.35);
         const playerVelocity = new THREE.Vector3();
         const playerDirection = new THREE.Vector3();
         let playerOnFloor = false;
         const GRAVITY = 30;
 
-        // ================================================================
-        // 5. CAMARA SUAVE, ROLL, BOBBING, RETROCESO Y ZOOM
-        // ================================================================
-        // La camara sigue al jugador con suavidad (positionSmoothFactor).
-        // targetYaw/Pitch se actualizan con el raton y se interpolan.
-        // Roll: inclinacion lateral al girar, con inercia.
-        // Head bobbing: movimiento vertical/lateral al caminar.
-        // Zoom: clic derecho reduce FOV a 45.
-        // Retroceso: se aplica un offset (recoilOffset) que patea hacia
-        // arriba y decae exponencialmente. Antes el error era que el
-        // retroceso iba hacia abajo porque se restaba RECOIL_STRENGTH
-        // en vez de sumar un offset separado.
+        //  CAMARA 
         let targetYaw = 0, targetPitch = 0, previousTargetYaw = 0;
         const cameraPositionTarget = new THREE.Vector3();
         const cameraPositionCurrent = new THREE.Vector3();
@@ -534,30 +681,20 @@
         let isZoomed = false;
         const NORMAL_FOV = 75, ZOOM_FOV = 45;
         let mouseSensitivity = 0.002;
-
-        // Retroceso corregido: ahora el arma patea hacia arriba.
         let recoilOffset = 0;
-        const RECOIL_STRENGTH = 0.025; // intensidad del pateo
-        const RECOIL_DECAY = 10.0;      // velocidad de recuperacion
+        const RECOIL_STRENGTH = 0.025, RECOIL_DECAY = 10.0;
 
         cameraPositionTarget.copy(playerCollider.end);
         cameraPositionCurrent.copy(playerCollider.end);
         camera.position.copy(playerCollider.end);
 
-        // ================================================================
-        // 6. ESTADO DE MUERTE (DYING/DEAD)
-        // ================================================================
-        // Cuando la vida llega a 0, se activa "dying". La camara se
-        // desvincula del jugador y cae con fisicas durante 3 segundos.
-        // Luego aparece la pantalla de "You Died".
+        //  ESTADO DEL JUEGO 
         let isDead = false, dying = false, deathTimer = 0;
+        let lowHealthPlaying = false;
         const DEATH_DELAY = 3.0;
         const cameraVelocity = new THREE.Vector3();
         const cameraCollider = new THREE.Sphere(new THREE.Vector3(), 0.2);
 
-        // ================================================================
-        // 7. ESTADISTICAS DE JUEGO
-        // ================================================================
         let health = 100, kills = 0, wave = 1;
         let ammo = 30, reserveAmmo = 30;
         let enemiesToSpawn = 5, enemiesSpawned = 0, enemiesKilledThisWave = 0;
@@ -565,24 +702,78 @@
         const damageVignette = document.getElementById('damageVignette');
         const hudElement = document.getElementById('hud');
 
-        // ================================================================
-        // 8. BOTIQUINES DE SALUD (PICKUPS)
-        // ================================================================
-        // Cada vez que un enemigo muere, tiene una probabilidad de soltar
-        // un botiquin representado por un sprite con el emoji ❤️.
-        // El sprite se tine de verde (color: 0x00ff88) y pulsa.
-        // Al acercarse, recupera 25 de vida (max 100).
-        const healthPickups = [];
-        const pickupLifetime = 15; // segundos antes de desaparecer
-        const pickupRadius = 1.5;
-        const healAmount = 25;
-        const dropChanceBase = 0.1; // 10% base, aumenta con oleadas
+        //  PAUSAR 
+        let isGamePaused = false;
+        const pauseMenuDiv = document.getElementById('pauseMenu');
+        const pauseMusicSlider = document.getElementById('pauseMusicVolume');
+        const pauseSfxSlider = document.getElementById('pauseSfxVolume');
+        const pauseMusicVal = document.getElementById('pauseMusicValue');
+        const pauseSfxVal = document.getElementById('pauseSfxValue');
 
-        // Textura del corazon generada en un canvas
+        function updatePauseUI() {
+            pauseMusicVal.innerText = pauseMusicSlider.value + '%';
+            pauseSfxVal.innerText = pauseSfxSlider.value + '%';
+        }
+
+        pauseMusicSlider.addEventListener('input', () => {
+            updatePauseUI();
+            const val = pauseMusicSlider.value / 100;
+            gunAudio.volume = val;
+            reloadAudio.volume = val;
+            healthAudio.volume = val;
+            explosionAudio.volume = val;
+        });
+
+        pauseSfxSlider.addEventListener('input', () => {
+            updatePauseUI();
+            const val = pauseSfxSlider.value / 100;
+            gunAudio.volume = val;
+            reloadAudio.volume = val;
+            healthAudio.volume = val;
+            explosionAudio.volume = val;
+        });
+
+        document.getElementById('pauseResetBtn').addEventListener('click', () => {
+            pauseMusicSlider.value = 70;
+            pauseSfxSlider.value = 70;
+            updatePauseUI();
+            gunAudio.volume = 0.7;
+            reloadAudio.volume = 0.7;
+            healthAudio.volume = 0.7;
+            explosionAudio.volume = 0.7;
+        });
+
+        document.getElementById('pauseResumeBtn').addEventListener('click', () => {
+            isGamePaused = false;
+            pauseMenuDiv.style.display = 'none';
+            if (!isDead && !dying) document.body.requestPointerLock();
+        });
+
+        // TECLA PA PAUSAR
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Escape') {
+                e.preventDefault();
+                if (!worldLoaded || isDead || dying) return;
+                if (!isGamePaused) {
+                    isGamePaused = true;
+                    pauseMenuDiv.style.display = 'flex';
+                    document.exitPointerLock();
+                    updatePauseUI();
+                } else {
+                    isGamePaused = false;
+                    pauseMenuDiv.style.display = 'none';
+                    if (!isDead && !dying) document.body.requestPointerLock();
+                }
+            }
+        });
+
+        //  BOTIQUINES 
+        const healthPickups = [];
+        const pickupLifetime = 15, pickupRadius = 1.5, healAmount = 25, dropChanceBase = 0.1;
+
         function createHeartTexture() {
             const canvas = document.createElement('canvas');
-            canvas.width = 64;
-            canvas.height = 64;
+            canvas.width = 64; canvas.height = 64;
             const ctx = canvas.getContext('2d');
             ctx.font = '50px Arial';
             ctx.textAlign = 'center';
@@ -593,26 +784,15 @@
         const heartTexture = createHeartTexture();
 
         function createHealthPickup(position) {
-            const material = new THREE.SpriteMaterial({
-                map: heartTexture,
-                color: 0x00ff88,      // tinte verde
-                depthTest: false,
-                depthWrite: false
-            });
+            const material = new THREE.SpriteMaterial({ map: heartTexture, color: 0x00ff88, depthTest: false, depthWrite: false });
             const sprite = new THREE.Sprite(material);
             sprite.position.copy(position);
             sprite.scale.set(0.8, 0.8, 0.8);
             scene.add(sprite);
-            healthPickups.push({
-                sprite,
-                age: 0,
-                pulsePhase: Math.random() * Math.PI * 2
-            });
+            healthPickups.push({ sprite, age: 0, pulsePhase: Math.random() * Math.PI * 2 });
         }
 
-        // ================================================================
-        // 9. ACTUALIZACION DE UI (HUD, VINETA, SATURACION)
-        // ================================================================
+        //  UI 
         function updateUI() {
             document.getElementById('healthText').innerHTML = Math.floor(health);
             document.getElementById('healthFill').style.width = health + '%';
@@ -620,32 +800,38 @@
             document.getElementById('waveText').innerHTML = wave;
             document.getElementById('ammo').innerHTML = ammo;
             document.getElementById('ammoSmall').innerHTML = '/ ' + reserveAmmo;
-            // Vineta roja segun vida
-            if (health < 40) {
-                damageVignette.style.opacity = Math.min(1, (40 - health) / 40) * 0.8;
-            } else {
-                damageVignette.style.opacity = 0;
-            }
-            // Saturacion cuando vida < 20
+
+            if (health < 40) damageVignette.style.opacity = Math.min(1, (40 - health) / 40) * 0.8;
+            else damageVignette.style.opacity = 0;
             renderer.domElement.style.filter = `saturate(${health < 20 ? Math.max(0, health / 20) : 1})`;
+
+            if (health < 40 && health > 0) {
+                if (!lowHealthPlaying) {
+                    lowHealthAudio.play().catch(() => { });
+                    lowHealthPlaying = true;
+                }
+            } else {
+                if (lowHealthPlaying) {
+                    lowHealthAudio.pause();
+                    lowHealthAudio.currentTime = 0;
+                    lowHealthPlaying = false;
+                }
+            }
+
         }
         updateUI();
 
-        // ================================================================
-        // 10. TEMPORIZADOR DE PARTIDA
-        // ================================================================
+        //  TEMPORIZADOR 
         let gameSeconds = 0;
         setInterval(() => {
-            if (!worldLoaded || isDead || dying) return;
+            if (!worldLoaded || isDead || dying || isGamePaused) return;
             gameSeconds++;
             const mins = String(Math.floor(gameSeconds / 60)).padStart(2, '0');
             const secs = String(gameSeconds % 60).padStart(2, '0');
             document.getElementById('timer').innerHTML = mins + ':' + secs;
         }, 1000);
 
-        // ================================================================
-        // 11. PANTALLA DE MUERTE
-        // ================================================================
+        //  MUERTE 
         function showDeathScreen() {
             isDead = true;
             document.getElementById('deathScreen').style.display = 'flex';
@@ -669,46 +855,37 @@
         }
 
         document.getElementById('restartButton').addEventListener('click', () => location.reload());
-        document.getElementById('exitButton').addEventListener('click', () => {
-            // Redirige al menú principal (PantallaInicio.html)
-            window.location.href = 'Menu/PantallaInicio.html';
-            });
+        document.getElementById('exitButton').addEventListener('click', () => window.location.href = 'Menu/PantallaInicio.html');
 
-        // ================================================================
-        // 12. CONTROLES DE TECLADO Y RATON
-        // ================================================================
+        //  CONTROLES 
         const keyStates = {};
         document.addEventListener('keydown', (e) => {
-            if (!worldLoaded || isDead || dying) return;
+            if (!worldLoaded || isDead || dying || isGamePaused) return;
             keyStates[e.code] = true;
             if (e.code === 'KeyR') reload();
         });
         document.addEventListener('keyup', (e) => { keyStates[e.code] = false; });
         document.body.addEventListener('click', () => {
-            if (!worldLoaded || isDead || dying) return;
+            if (!worldLoaded || isDead || dying || isGamePaused) return;
             document.body.requestPointerLock();
         });
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('mousedown', (e) => {
-            if (!worldLoaded || isDead || dying) return;
+            if (!worldLoaded || isDead || dying || isGamePaused) return;
             if (e.button === 0) shoot();
             else if (e.button === 2 && document.pointerLockElement === document.body) isZoomed = true;
         });
         document.addEventListener('mouseup', (e) => { if (e.button === 2) isZoomed = false; });
-        document.addEventListener('pointerlockchange', () => {
-            if (document.pointerLockElement !== document.body) isZoomed = false;
-        });
+        document.addEventListener('pointerlockchange', () => { if (document.pointerLockElement !== document.body) isZoomed = false; });
         document.body.addEventListener('mousemove', (e) => {
-            if (!worldLoaded || isDead || dying || document.pointerLockElement !== document.body) return;
+            if (!worldLoaded || isDead || dying || document.pointerLockElement !== document.body || isGamePaused) return;
             const sens = isZoomed ? mouseSensitivity * 0.5 : mouseSensitivity;
             targetYaw -= e.movementX * sens;
             targetPitch -= e.movementY * sens;
             targetPitch = Math.max(-Math.PI / 2.5, Math.min(Math.PI / 2.5, targetPitch));
         });
 
-        // ================================================================
-        // 13. MOVIMIENTO DEL JUGADOR
-        // ================================================================
+        //  MOVIMIENTO 
         function getForwardVector() {
             camera.getWorldDirection(playerDirection);
             playerDirection.y = 0;
@@ -752,62 +929,42 @@
             cameraPositionTarget.copy(playerCollider.end);
         }
 
-        // ================================================================
-        // 14. ENEMIGOS (SPAWN, IA, COLISION CON JUGADOR)
-        // ================================================================
-        // Tres tipos: normal (rojo, velocidad 4.5), rapido (verde, 6.0),
-        // tanque explosivo (azul, 2.5). Todos tienen collider esferico.
-        // Al morir, el tanque explota danando al jugador.
-        // La colision con el jugador se resuelve empujando al enemigo
-        // hacia afuera de la capsula del jugador.
+        //  ENEMIGOS 
         const enemies = [];
         const normalEnemyMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 });
         const speedyEnemyMaterial = new THREE.MeshLambertMaterial({ color: 0x00ff00 });
         const tankEnemyMaterial = new THREE.MeshLambertMaterial({ color: 0x0066ff });
-
         const normalRadius = 0.5, speedyRadius = 0.35, tankRadius = 0.7;
         const normalGeometry = new THREE.SphereGeometry(normalRadius, 16, 16);
         const speedyGeometry = new THREE.SphereGeometry(speedyRadius, 16, 16);
         const tankGeometry = new THREE.SphereGeometry(tankRadius, 16, 16);
-
         const MAP_BOUNDARY_XZ = 24, MAP_Y_MIN = -10;
-        const BASE_MAX_SPEED = 4.5;
-        const SPEEDY_MAX_SPEED = 6.0;
-        const TANK_MAX_SPEED = 2.5;
+        const BASE_MAX_SPEED = 4.5, SPEEDY_MAX_SPEED = 6.0, TANK_MAX_SPEED = 2.5;
 
         function spawnEnemy() {
-            if (!worldLoaded || isDead || dying) return;
+            if (!worldLoaded || isDead || dying || isGamePaused) return;
             const specialChance = Math.min(0.05 + wave * 0.05, 0.3);
             const isSpeedy = Math.random() < specialChance;
             const isTank = !isSpeedy && Math.random() < 0.2;
-
-            let geometry, material, radius, speed, health;
+            let geometry, material, radius, speed, healthE;
             if (isSpeedy) {
                 geometry = speedyGeometry; material = speedyEnemyMaterial; radius = speedyRadius;
-                speed = SPEEDY_MAX_SPEED; health = 200;
+                speed = SPEEDY_MAX_SPEED; healthE = 200;
             } else if (isTank) {
                 geometry = tankGeometry; material = tankEnemyMaterial; radius = tankRadius;
-                speed = TANK_MAX_SPEED; health = 300;
+                speed = TANK_MAX_SPEED; healthE = 300;
             } else {
                 geometry = normalGeometry; material = normalEnemyMaterial; radius = normalRadius;
-                speed = BASE_MAX_SPEED; health = 100;
+                speed = BASE_MAX_SPEED; healthE = 100;
             }
-
             const enemy = new THREE.Mesh(geometry, material);
             enemy.castShadow = true;
             const spawnX = (Math.random() - 0.5) * 40;
             const spawnZ = (Math.random() - 0.5) * 40;
-            enemy.position.set(
-                Math.max(-MAP_BOUNDARY_XZ + 1, Math.min(MAP_BOUNDARY_XZ - 1, spawnX)),
-                3,
-                Math.max(-MAP_BOUNDARY_XZ + 1, Math.min(MAP_BOUNDARY_XZ - 1, spawnZ))
-            );
+            enemy.position.set(Math.max(-MAP_BOUNDARY_XZ + 1, Math.min(MAP_BOUNDARY_XZ - 1, spawnX)), 3, Math.max(-MAP_BOUNDARY_XZ + 1, Math.min(MAP_BOUNDARY_XZ - 1, spawnZ)));
             const collider = new THREE.Sphere(enemy.position.clone(), radius);
             scene.add(enemy);
-            enemies.push({
-                mesh: enemy, velocity: new THREE.Vector3(), collider: collider,
-                health: health, maxSpeed: speed, isExplosive: isTank, glowMesh: null
-            });
+            enemies.push({ mesh: enemy, velocity: new THREE.Vector3(), collider: collider, health: healthE, maxSpeed: speed, isExplosive: isTank, glowMesh: null });
         }
 
         function capsuleClosestPointToPoint(capsule, point) {
@@ -818,12 +975,11 @@
         }
 
         function updateEnemies(deltaTime) {
-            if (!worldLoaded || isDead) return;
+            if (!worldLoaded || isDead || isGamePaused) return;
             const playerPos = camera.position.clone();
             enemies.forEach((enemy) => {
-                if (dying) {
-                    enemy.velocity.multiplyScalar(0.9);
-                } else {
+                if (dying) enemy.velocity.multiplyScalar(0.9);
+                else {
                     const dir = new THREE.Vector3().subVectors(playerPos, enemy.mesh.position);
                     dir.y = 0; dir.normalize();
                     const desiredVel = dir.clone().multiplyScalar(enemy.maxSpeed);
@@ -832,22 +988,14 @@
                     enemy.velocity.z += (desiredVel.z - enemy.velocity.z) * smoothFactor;
                 }
                 enemy.velocity.y -= GRAVITY * deltaTime;
-
                 const deltaMove = enemy.velocity.clone().multiplyScalar(deltaTime);
                 enemy.collider.center.add(deltaMove);
-
-                // Colision con el mundo
                 const worldResult = worldOctree.sphereIntersect(enemy.collider);
                 if (worldResult) {
                     enemy.collider.center.addScaledVector(worldResult.normal, worldResult.depth);
-                    if (worldResult.normal.y < 0.5) {
-                        enemy.velocity.x = 0; enemy.velocity.z = 0;
-                    } else {
-                        enemy.velocity.y = 0;
-                    }
+                    if (worldResult.normal.y < 0.5) { enemy.velocity.x = 0; enemy.velocity.z = 0; }
+                    else enemy.velocity.y = 0;
                 }
-
-                // Colision con el jugador (empuje)
                 const closestPoint = capsuleClosestPointToPoint(playerCollider, enemy.collider.center);
                 const playerToEnemy = new THREE.Vector3().subVectors(enemy.collider.center, closestPoint);
                 const dist = playerToEnemy.length();
@@ -858,32 +1006,20 @@
                     const velDot = enemy.velocity.dot(normal);
                     if (velDot < 0) enemy.velocity.addScaledVector(normal, -velDot);
                 }
-
-                // Limites del mapa
                 const pos = enemy.collider.center;
                 if (pos.x > MAP_BOUNDARY_XZ) { pos.x = MAP_BOUNDARY_XZ; enemy.velocity.x = 0; }
                 if (pos.x < -MAP_BOUNDARY_XZ) { pos.x = -MAP_BOUNDARY_XZ; enemy.velocity.x = 0; }
                 if (pos.z > MAP_BOUNDARY_XZ) { pos.z = MAP_BOUNDARY_XZ; enemy.velocity.z = 0; }
                 if (pos.z < -MAP_BOUNDARY_XZ) { pos.z = -MAP_BOUNDARY_XZ; enemy.velocity.z = 0; }
-                if (pos.y < MAP_Y_MIN) {
-                    pos.set((Math.random() - 0.5) * 30, 3, (Math.random() - 0.5) * 30);
-                    enemy.velocity.set(0, 0, 0);
-                }
-                if (Math.sqrt(pos.x * pos.x + pos.z * pos.z) > 35) {
-                    pos.set((Math.random() - 0.5) * 20, 3, (Math.random() - 0.5) * 20);
-                    enemy.velocity.set(0, 0, 0);
-                }
+                if (pos.y < MAP_Y_MIN) { pos.set((Math.random() - 0.5) * 30, 3, (Math.random() - 0.5) * 30); enemy.velocity.set(0, 0, 0); }
+                if (Math.sqrt(pos.x * pos.x + pos.z * pos.z) > 35) { pos.set((Math.random() - 0.5) * 20, 3, (Math.random() - 0.5) * 20); enemy.velocity.set(0, 0, 0); }
                 enemy.mesh.position.copy(pos);
-
-                // Daño al jugador
                 if (!dying && !isDead && enemy.mesh.position.distanceTo(playerPos) < playerCollider.radius + enemy.collider.radius + 0.1) {
                     health -= 0.2;
                     updateUI();
                     if (health <= 0) startDying();
                 }
             });
-
-            // Glow para enemigos restantes (cuando quedan <=3)
             if (!dying && enemiesSpawned >= enemiesToSpawn) {
                 const shouldGlow = enemies.length <= 3 && enemies.length > 0;
                 enemies.forEach(enemy => {
@@ -904,9 +1040,7 @@
             }
         }
 
-        // ================================================================
-        // 15. OLEADAS
-        // ================================================================
+        //  OLEADAS 
         function nextWave() {
             wave++;
             enemiesToSpawn += 7;
@@ -919,15 +1053,14 @@
         }
 
         setInterval(() => {
-            if (!worldLoaded || isDead || dying) return;
+            if (!worldLoaded || isDead || dying || isGamePaused) return;
             if (enemiesSpawned < enemiesToSpawn) { spawnEnemy(); enemiesSpawned++; }
         }, 1200);
 
-        // ================================================================
-        // 16. EXPLOSIONES (ENEMIGO AZUL)
-        // ================================================================
+        //  EXPLOSIONES 
         const explosions = [];
         function createExplosion(position) {
+            playExplosionSound();
             const geometry = new THREE.SphereGeometry(0.7, 16, 16);
             const material = new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.9, depthWrite: false });
             const explosion = new THREE.Mesh(geometry, material);
@@ -944,15 +1077,11 @@
             }
         }
 
-        // ================================================================
-        // 17. BALAS, IMPACTOS Y RETROCESO
-        // ================================================================
+        //  BALAS 
         const bullets = [];
         const bulletGeometry = new THREE.SphereGeometry(0.08, 8, 8);
         const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
         const BULLET_SPEED = 70, BULLET_RADIUS = 0.12, STEP_SIZE = 0.2;
-
-        // Textura de impacto (decal)
         let decalTexture;
         (() => {
             const canvas = document.createElement('canvas');
@@ -964,18 +1093,23 @@
             ctx.fillStyle = gradient; ctx.fillRect(0, 0, 64, 64);
             decalTexture = new THREE.CanvasTexture(canvas);
         })();
-
         const sparks = [];
 
-        function reload() { ammo = 30; reserveAmmo = 30; updateUI(); }
+        function reload() {
+            if (ammo === 30) return;
+            playReloadSound();
+            ammo = 30;
+            reserveAmmo = 30;
+            updateUI();
+        }
 
         function shoot() {
-            if (!worldLoaded || isDead || dying || ammo <= 0) return;
-            ammo--; updateUI();
-            // Retroceso: sumamos un offset que luego decae
+            if (!worldLoaded || isDead || dying || ammo <= 0 || isGamePaused) return;
+            ammo--;
+            updateUI();
+            playGunSound();
             recoilOffset += RECOIL_STRENGTH;
-            if (recoilOffset > 0.2) recoilOffset = 0.2; // limite maximo
-
+            if (recoilOffset > 0.2) recoilOffset = 0.2;
             const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
             camera.getWorldDirection(playerDirection);
             bullet.position.copy(camera.position);
@@ -1008,7 +1142,7 @@
         }
 
         function updateBullets(deltaTime) {
-            if (!worldLoaded || isDead) return;
+            if (!worldLoaded || isDead || isGamePaused) return;
             for (let i = bullets.length - 1; i >= 0; i--) {
                 const bullet = bullets[i];
                 const totalDist = BULLET_SPEED * deltaTime;
@@ -1016,8 +1150,6 @@
                 const startPos = bullet.mesh.position.clone();
                 let remaining = totalDist;
                 let hit = false, hitPoint = new THREE.Vector3(), hitNormal = new THREE.Vector3(), hitEnemy = null;
-
-                // Avanzamos la bala en pasos pequenos para no atravesar paredes finas
                 while (remaining > 0 && !hit) {
                     const step = Math.min(STEP_SIZE, remaining);
                     const newPos = startPos.clone().addScaledVector(dir, step);
@@ -1030,17 +1162,13 @@
                     startPos.copy(newPos);
                     remaining -= step;
                 }
-
                 if (hit) {
                     if (hitEnemy) {
                         hitEnemy.health -= 50;
                         createBulletImpact(hitPoint, hitNormal, false);
                         if (hitEnemy.health <= 0) {
-                            // Probabilidad de soltar botiquin
                             const dropChance = Math.min(0.2, dropChanceBase + wave * 0.01);
-                            if (Math.random() < dropChance) {
-                                createHealthPickup(hitEnemy.mesh.position.clone().add(new THREE.Vector3(0, 0.5, 0)));
-                            }
+                            if (Math.random() < dropChance) createHealthPickup(hitEnemy.mesh.position.clone().add(new THREE.Vector3(0, 0.5, 0)));
                             if (hitEnemy.isExplosive) createExplosion(hitEnemy.mesh.position);
                             if (hitEnemy.glowMesh) { scene.remove(hitEnemy.glowMesh); hitEnemy.glowMesh.geometry.dispose(); hitEnemy.glowMesh.material.dispose(); }
                             scene.remove(hitEnemy.mesh);
@@ -1049,9 +1177,7 @@
                             updateUI();
                             if (enemiesKilledThisWave >= enemiesToSpawn) nextWave();
                         }
-                    } else {
-                        createBulletImpact(hitPoint, hitNormal, true);
-                    }
+                    } else createBulletImpact(hitPoint, hitNormal, true);
                     scene.remove(bullet.mesh);
                     bullets.splice(i, 1);
                 } else {
@@ -1092,13 +1218,12 @@
                     healthPickups.splice(i, 1);
                     continue;
                 }
-                // Animacion de pulso
                 const pulse = 1 + Math.sin(pickup.age * 5 + pickup.pulsePhase) * 0.1;
                 pickup.sprite.scale.set(0.8 * pulse, 0.8 * pulse, 1);
-                // Recoger si el jugador esta cerca
                 const dist = pickup.sprite.position.distanceTo(camera.position);
                 if (dist < pickupRadius) {
                     health = Math.min(100, health + healAmount);
+                    playHealthSound();
                     updateUI();
                     scene.remove(pickup.sprite);
                     healthPickups.splice(i, 1);
@@ -1119,14 +1244,10 @@
         let hemiIntensity = 1.5, targetHemiIntensity = 1.5;
         let dirIntensity = 2, targetDirIntensity = 2;
         let dirColor = new THREE.Color(0xffffff), targetDirColor = new THREE.Color(0xffffff);
-
-        let rainTransition = 0.0;
-        let targetRain = 0.0;
+        let rainTransition = 0.0, targetRain = 0.0;
         let rainParticles = null;
-        let baseWeatherTimer = 0;
-        let rainTimer = 0;
-        const BASE_CHANGE_MIN = 30, BASE_CHANGE_MAX = 70;
-        const RAIN_CHANGE_MIN = 40, RAIN_CHANGE_MAX = 100;
+        let baseWeatherTimer = 0, rainTimer = 0;
+        const BASE_CHANGE_MIN = 30, BASE_CHANGE_MAX = 70, RAIN_CHANGE_MIN = 40, RAIN_CHANGE_MAX = 100;
 
         function createRainParticles() {
             if (rainParticles) return;
@@ -1172,17 +1293,11 @@
             const baseChangeInterval = BASE_CHANGE_MIN + Math.random() * (BASE_CHANGE_MAX - BASE_CHANGE_MIN);
             if (baseWeatherTimer >= baseChangeInterval) {
                 baseWeatherTimer = 0;
-                const newBase = currentBase === 'day' ? 'night' : 'day';
-                setBaseTarget(newBase);
+                setBaseTarget(currentBase === 'day' ? 'night' : 'day');
             }
-
             rainTimer += deltaTime;
             const rainChangeInterval = RAIN_CHANGE_MIN + Math.random() * (RAIN_CHANGE_MAX - RAIN_CHANGE_MIN);
-            if (rainTimer >= rainChangeInterval) {
-                rainTimer = 0;
-                targetRain = targetRain === 0 ? 1 : 0;
-            }
-
+            if (rainTimer >= rainChangeInterval) { rainTimer = 0; targetRain = targetRain === 0 ? 1 : 0; }
             if (baseTransition < 1.0) {
                 baseTransition = Math.min(1.0, baseTransition + deltaTime * 0.5);
                 const t = baseTransition;
@@ -1196,53 +1311,38 @@
             hemi.intensity = hemiIntensity;
             dirLight.intensity = dirIntensity;
             dirLight.color.copy(dirColor);
-
             if (targetRain !== rainTransition) {
                 rainTransition += (targetRain - rainTransition) * Math.min(1, deltaTime * 0.8);
                 if (Math.abs(rainTransition - targetRain) < 0.01) rainTransition = targetRain;
             }
             if (rainTransition > 0.01 && !rainParticles) createRainParticles();
             if (rainTransition < 0.01 && rainParticles) removeRainParticles();
-
             const rainDarkFactor = 1 - rainTransition * 0.5;
             hemi.intensity = hemiIntensity * rainDarkFactor;
             dirLight.intensity = dirIntensity * rainDarkFactor;
-
             if (rainParticles) updateRainParticles(deltaTime);
         }
-
         setBaseTarget('day');
         currentBase = 'day';
         skyColor.set(0x88ccee);
         baseTransition = 1.0;
 
-        // ================================================================
-        // 19. RADAR MINIMAPA
-        // ================================================================
-        // El radar dibuja puntos rojos para los enemigos dentro de un
-        // radio de 30 unidades. El punto cian del centro es el jugador.
-        // La orientacion se corrigio para que "arriba" en el radar
-        // corresponda a la direccion de la camara.
+        //  RADAR 
         const radarDiv = document.getElementById('radar');
         const radarRange = 30;
-
         function updateRadar() {
             radarDiv.querySelectorAll('.radar-dot').forEach(d => d.remove());
             const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
             forward.y = 0; forward.normalize();
-
             enemies.forEach(enemy => {
                 const delta = new THREE.Vector3().subVectors(enemy.mesh.position, camera.position);
                 const d2 = new THREE.Vector2(delta.x, delta.z);
                 const dist = d2.length();
                 if (dist > radarRange) return;
-
                 const angle = Math.atan2(d2.y, d2.x) - Math.atan2(forward.z, forward.x);
-                const containerSize = 120;
-                const half = containerSize / 2;
+                const containerSize = 120, half = containerSize / 2;
                 const radarX = half + Math.sin(angle) * (dist / radarRange) * half;
                 const radarY = half - Math.cos(angle) * (dist / radarRange) * half;
-
                 const dot = document.createElement('div');
                 dot.className = 'radar-dot';
                 dot.style.left = radarX + 'px';
@@ -1251,9 +1351,6 @@
             });
         }
 
-        // ================================================================
-        // 20. TELETRANSPORTE SI CAE DEL MAPA
-        // ================================================================
         function teleportPlayerIfOob() {
             if (camera.position.y <= -25) {
                 playerCollider.start.set(0, 0.35, 0); playerCollider.end.set(0, 1, 0);
@@ -1263,18 +1360,13 @@
             }
         }
 
-        // ================================================================
-        // 21. REDIMENSIONAR VENTANA
-        // ================================================================
         window.addEventListener('resize', () => {
             camera.aspect = innerWidth / innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(innerWidth, innerHeight);
         });
 
-        // ================================================================
-        // 22. BUCLE PRINCIPAL
-        // ================================================================
+        //  ANIMACIÓN PRINCIPAL 
         const clock = new THREE.Clock();
         previousTargetYaw = targetYaw;
 
@@ -1283,82 +1375,87 @@
             const deltaTime = Math.min(0.05, clock.getDelta());
 
             if (worldLoaded) {
+
                 updateWeather(deltaTime);
 
-                if (!dying && !isDead) {
-                    controls(deltaTime);
-                    updatePlayer(deltaTime);
-                }
 
-                updateEnemies(deltaTime);
-                updateBullets(deltaTime);
-                updateSparks(deltaTime);
-                updateExplosions(deltaTime);
-                updateHealthPickups(deltaTime);
-
-                if (!dying && !isDead) {
-                    teleportPlayerIfOob();
-
-                    const rotLerp = 1 - Math.exp(-rotationSmoothFactor * deltaTime * 60);
-                    camera.rotation.y += (targetYaw - camera.rotation.y) * rotLerp;
-                    camera.rotation.x += (targetPitch - camera.rotation.x) * rotLerp;
-
-                    // Aplicar retroceso como offset adicional
-                    camera.rotation.x += recoilOffset;
-                    recoilOffset *= Math.exp(-RECOIL_DECAY * deltaTime);
-                    if (Math.abs(recoilOffset) < 0.0001) recoilOffset = 0;
-
-                    const deltaYaw = targetYaw - previousTargetYaw;
-                    smoothedAngularVelocity += (deltaYaw - smoothedAngularVelocity) * (1 - rollInertia);
-                    const targetRoll = THREE.MathUtils.clamp(smoothedAngularVelocity * rollStrength, -0.15, 0.15);
-                    const rollLerp = 1 - Math.exp(-0.08 * deltaTime * 60);
-                    currentRoll += (targetRoll - currentRoll) * rollLerp;
-                    camera.rotation.z = currentRoll;
-                    previousTargetYaw = targetYaw;
-
-                    const speed = playerVelocity.length();
-                    const isMoving = speed > 0.5 && playerOnFloor;
-                    if (isMoving) bobbingPhase += deltaTime * bobbingSpeed * speed;
-                    else bobbingPhase += deltaTime * 4.0 * (0 - bobbingPhase);
-                    const bobY = Math.sin(bobbingPhase) * bobbingAmplitudeY;
-                    const bobX = Math.cos(bobbingPhase * 0.5) * bobbingAmplitudeX;
-
-                    const posLerp = 1 - Math.exp(-positionSmoothFactor * deltaTime * 60);
-                    cameraPositionCurrent.lerp(cameraPositionTarget, posLerp);
-                    const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
-                    const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
-                    camera.position.copy(cameraPositionCurrent).addScaledVector(right, bobX).addScaledVector(up, bobY);
-
-                    const baseFov = NORMAL_FOV + speed * 0.8;
-                    const finalFov = isZoomed ? ZOOM_FOV : baseFov;
-                    camera.fov += (finalFov - camera.fov) * 0.1;
-                    camera.updateProjectionMatrix();
-
-                    hudElement.style.transform = `translate(${bobX * 30}px, ${bobY * 40}px) rotate(${currentRoll * 8}deg)`;
-                } else if (dying) {
-                    cameraVelocity.y -= GRAVITY * deltaTime;
-                    const deltaMove = cameraVelocity.clone().multiplyScalar(deltaTime);
-                    cameraCollider.center.copy(camera.position).add(deltaMove);
-                    const result = worldOctree.sphereIntersect(cameraCollider);
-                    if (result) {
-                        cameraCollider.center.addScaledVector(result.normal, result.depth);
-                        cameraVelocity.addScaledVector(result.normal, -result.normal.dot(cameraVelocity) * 1.2);
-                        cameraVelocity.multiplyScalar(0.5);
+                if (!isGamePaused) {
+                    if (!dying && !isDead) {
+                        controls(deltaTime);
+                        updatePlayer(deltaTime);
                     }
-                    camera.position.copy(cameraCollider.center);
-                    camera.rotation.x += cameraVelocity.length() * deltaTime * 0.5;
-                    camera.rotation.z += cameraVelocity.x * deltaTime * 2;
-                    deathTimer += deltaTime;
-                    if (deathTimer >= DEATH_DELAY) { dying = false; showDeathScreen(); }
-                    camera.fov += (NORMAL_FOV - camera.fov) * 0.1;
-                    camera.updateProjectionMatrix();
-                    hudElement.style.transform = 'translate(0px, 0px) rotate(0deg)';
+
+                    updateEnemies(deltaTime);
+                    updateBullets(deltaTime);
+                    updateSparks(deltaTime);
+                    updateExplosions(deltaTime);
+                    updateHealthPickups(deltaTime);
+
+                    if (!dying && !isDead) {
+                        teleportPlayerIfOob();
+
+                        const rotLerp = 1 - Math.exp(-rotationSmoothFactor * deltaTime * 60);
+                        camera.rotation.y += (targetYaw - camera.rotation.y) * rotLerp;
+                        camera.rotation.x += (targetPitch - camera.rotation.x) * rotLerp;
+
+                        camera.rotation.x += recoilOffset;
+                        recoilOffset *= Math.exp(-RECOIL_DECAY * deltaTime);
+                        if (Math.abs(recoilOffset) < 0.0001) recoilOffset = 0;
+
+                        const deltaYaw = targetYaw - previousTargetYaw;
+                        smoothedAngularVelocity += (deltaYaw - smoothedAngularVelocity) * (1 - rollInertia);
+                        const targetRoll = THREE.MathUtils.clamp(smoothedAngularVelocity * rollStrength, -0.15, 0.15);
+                        const rollLerp = 1 - Math.exp(-0.08 * deltaTime * 60);
+                        currentRoll += (targetRoll - currentRoll) * rollLerp;
+                        camera.rotation.z = currentRoll;
+                        previousTargetYaw = targetYaw;
+
+                        const speed = playerVelocity.length();
+                        const isMoving = speed > 0.5 && playerOnFloor;
+                        if (isMoving) bobbingPhase += deltaTime * bobbingSpeed * speed;
+                        else bobbingPhase += deltaTime * 4.0 * (0 - bobbingPhase);
+                        const bobY = Math.sin(bobbingPhase) * bobbingAmplitudeY;
+                        const bobX = Math.cos(bobbingPhase * 0.5) * bobbingAmplitudeX;
+
+                        const posLerp = 1 - Math.exp(-positionSmoothFactor * deltaTime * 60);
+                        cameraPositionCurrent.lerp(cameraPositionTarget, posLerp);
+                        const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+                        const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
+                        camera.position.copy(cameraPositionCurrent).addScaledVector(right, bobX).addScaledVector(up, bobY);
+
+                        const baseFov = NORMAL_FOV + speed * 0.8;
+                        const finalFov = isZoomed ? ZOOM_FOV : baseFov;
+                        camera.fov += (finalFov - camera.fov) * 0.1;
+                        camera.updateProjectionMatrix();
+
+                        hudElement.style.transform = `translate(${bobX * 30}px, ${bobY * 40}px) rotate(${currentRoll * 8}deg)`;
+                    } else if (dying) {
+                        cameraVelocity.y -= GRAVITY * deltaTime;
+                        const deltaMove = cameraVelocity.clone().multiplyScalar(deltaTime);
+                        cameraCollider.center.copy(camera.position).add(deltaMove);
+                        const result = worldOctree.sphereIntersect(cameraCollider);
+                        if (result) {
+                            cameraCollider.center.addScaledVector(result.normal, result.depth);
+                            cameraVelocity.addScaledVector(result.normal, -result.normal.dot(cameraVelocity) * 1.2);
+                            cameraVelocity.multiplyScalar(0.5);
+                        }
+                        camera.position.copy(cameraCollider.center);
+                        camera.rotation.x += cameraVelocity.length() * deltaTime * 0.5;
+                        camera.rotation.z += cameraVelocity.x * deltaTime * 2;
+                        deathTimer += deltaTime;
+                        if (deathTimer >= DEATH_DELAY) { dying = false; showDeathScreen(); }
+                        camera.fov += (NORMAL_FOV - camera.fov) * 0.1;
+                        camera.updateProjectionMatrix();
+                        hudElement.style.transform = 'translate(0px, 0px) rotate(0deg)';
+                    }
+
+                    updateRadar();
+                    updateUI();
                 }
 
-                updateRadar();
-                updateUI();
+
+                renderer.render(scene, camera);
             }
-            renderer.render(scene, camera);
         }
         animate();
     </script>

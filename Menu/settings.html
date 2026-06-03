@@ -45,16 +45,23 @@
 
     <div class="status-indicator">
         <div class="led red"></div>
-        <span>CONFIGURACION </span>
+        <span>CONFIGURACION</span>
     </div>
 
+    <!-- MUSICA -->
+    <audio id="bgMusic" autoplay loop>
+        <source src="/Audios/PP.mp3" type="audio/mpeg">
+    </audio>
+
     <script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js"
-            }
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js"
         }
+    }
     </script>
+
     <script type="module" src="settings.js"></script>
+
 </body>
 </html>
